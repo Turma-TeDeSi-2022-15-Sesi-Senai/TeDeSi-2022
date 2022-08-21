@@ -1,10 +1,8 @@
-
-
-
-
-
-
-
+# Atividade Sa7  alunos envolvidos 
+#
+# Robson luis Amaral
+# Gabriel Freitas dos Santos
+# Daylon Airton Kern
 
 
 def clear():
