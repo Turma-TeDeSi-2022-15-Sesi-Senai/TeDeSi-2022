@@ -1,5 +1,6 @@
 -- feito por @gabriel-fresan @Robsonro no github
-
+CREATE DATABASE TeDeSiFIFA-s2;
+USE TeDeSiFIFA-s2;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`estadio` (
   `id` INT NOT NULL,
