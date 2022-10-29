@@ -1,188 +1,97 @@
 -- feito por @gabriel-fresan @Robsonro no github
-CREATE DATABASE TeDeSiFIFA-s2;
-USE TeDeSiFIFA-s2;
+CREATE DATABASE TeDeSiFIFAS2;
+USE TeDeSiFIFAS2;
+CREATE TABLE Estadio(
+     id INT PRIMARY KEY AUTO_INCREMENT,
+     nome varchar(45)
+);
+CREATE TABLE Torcedor(
+     id INT PRIMARY KEY AUTO_INCREMENT,
+     cpf VARCHAR(14),
+     nome VARCHAR(45)
+);
+CREATE TABLE Jogo(
+     id INT AUTO_INCREMENT,
+     estadio_id INT NOT NULL,
+     horario VARCHAR(12),
+     gols_time_1 INT,
+     gols_time_2 INT,
+     PRIMARY KEY (id),
+     Foreign Key (estadio_id) REFERENCES Estadio(id)
+);
+CREATE TABLE Arbitragem(
+     id INT AUTO_INCREMENT,
+     jogo_id INT NOT NULL,
+     nome VARCHAR(45),
+     pais VARCHAR(45),
+     cpf VARCHAR(14),
+     PRIMARY KEY (id),
+     Foreign Key (jogo_id) REFERENCES Jogo(id)
+);
+CREATE TABLE Selecao(
+     id INT PRIMARY KEY AUTO_INCREMENT,
+     nome VARCHAR(45),
+     pais VARCHAR(45)
+);
+CREATE TABLE selecao_has_jogo(
+     selecao_id INT NOT NULL,
+     jogo_id INT NOT NULL,
+     Foreign Key (selecao_id) REFERENCES Selecao(id),
+     Foreign Key (jogo_id) REFERENCES Jogo(id)
+);
+CREATE TABLE Reserva(
+     id INT AUTO_INCREMENT,
+     torcedor_id INT NOT NULL,
+     jogo_id INT NOT NULL,
+     PRIMARY KEY (id),
+     Foreign Key (torcedor_id) REFERENCES Torcedor(id),
+     Foreign Key (jogo_id) REFERENCES Jogo(id)
+);
+CREATE TABLE Jogador(
+     id INT AUTO_INCREMENT,
+     selecao_id INT NOT NULL,
+     nome VARCHAR(45),
+     numero_camisa INT,
+     PRIMARY KEY (id),
+     Foreign Key (selecao_id) REFERENCES Selecao(id)
+);
+CREATE TABLE Cartoes(
+     jogador_id INT,
+     cartoes_amarelos INT,
+     cartoes_vermelhos INT,
+     Foreign Key (jogador_id) REFERENCES Jogador(id)
+);
+CREATE TABLE Substituicao(
+     id INT AUTO_INCREMENT,
+     selecao_id INT NOT NULL,
+     jogador_saiu INT NOT NULL,
+     jogador_entrou INT NOT NULL,
+     PRIMARY KEY (id),
+     Foreign Key (selecao_id) REFERENCES Selecao(id),
+     Foreign Key (jogador_saiu) REFERENCES Jogador(id),
+     Foreign Key (jogador_entrou) REFERENCES Jogador(id)
+);
 
-CREATE TABLE IF NOT EXISTS `mydb`.`estadio` (
-  `id` INT NOT NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB
 
-CREATE TABLE IF NOT EXISTS `mydb`.`jogo` (
-  `id` INT NOT NULL,
-  `estadio_id` INT NOT NULL,
-  `horario` DATE NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_jogo_estadio1_idx` (`estadio_id` ASC) VISIBLE,
-  CONSTRAINT `fk_jogo_estadio1`
-    FOREIGN KEY (`estadio_id`)
-    REFERENCES `mydb`.`estadio` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-
-CREATE TABLE IF NOT EXISTS `mydb`.`Arbitragem` (
-  `id` INT NOT NULL,
-  `jogo_id` INT NOT NULL,
-  `pais` VARCHAR(45) NULL,
-  `CPF` VARCHAR(14) NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_Arbitragem_jogo1_idx` (`jogo_id` ASC) VISIBLE,
-  CONSTRAINT `fk_Arbitragem_jogo1`
-    FOREIGN KEY (`jogo_id`)
-    REFERENCES `mydb`.`jogo` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-
-CREATE TABLE IF NOT EXISTS `mydb`.`Torcedor` (
-  `id` INT NOT NULL,
-  `CPF` VARCHAR(14) NOT NULL,
-  `nome` VARCHAR(45) NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB
-
-CREATE TABLE IF NOT EXISTS `mydb`.`reserva` (
-  `id` INT NOT NULL,
-  `Torcedor_id` INT NOT NULL,
-  `jogo_id` INT NOT NULL,
-  INDEX `fk_reserva_jogo1_idx` (`jogo_id` ASC) VISIBLE,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `fk_reserva_jogo1`
-    FOREIGN KEY (`jogo_id`)
-    REFERENCES `mydb`.`jogo` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_reserva_Torcedor1`
-    FOREIGN KEY (`Torcedor_id`)
-    REFERENCES `mydb`.`Torcedor` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-
-CREATE TABLE IF NOT EXISTS `mydb`.`resultado` (
-  `jogo_id` INT NOT NULL,
-  `gols_selecao_1` INT NULL,
-  `gols_selecao_2` INT NULL,
-  `selecao_ganhador` VARCHAR(45) NULL,
-  PRIMARY KEY (`jogo_id`),
-  CONSTRAINT `fk_resultado_jogo1`
-    FOREIGN KEY (`jogo_id`)
-    REFERENCES `mydb`.`jogo` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-
-CREATE TABLE IF NOT EXISTS `mydb`.`selecao` (
-  `id` INT NOT NULL,
-  `nome` VARCHAR(45) NULL,
-  `pais` VARCHAR(45) NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB
-
-CREATE TABLE IF NOT EXISTS `mydb`.`selecao_has_jogo` (
-  `selecao_id` INT NOT NULL,
-  `jogo_id` INT NOT NULL,
-  PRIMARY KEY (`selecao_id`, `jogo_id`),
-  INDEX `fk_selecao_has_jogo_jogo1_idx` (`jogo_id` ASC) VISIBLE,
-  INDEX `fk_selecao_has_jogo_selecao1_idx` (`selecao_id` ASC) VISIBLE,
-  CONSTRAINT `fk_selecao_has_jogo_selecao1`
-    FOREIGN KEY (`selecao_id`)
-    REFERENCES `mydb`.`selecao` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_selecao_has_jogo_jogo1`
-    FOREIGN KEY (`jogo_id`)
-    REFERENCES `mydb`.`jogo` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-
-CREATE TABLE IF NOT EXISTS `mydb`.`substituicao` (
-  `id` INT NOT NULL,
-  `selecao_id` INT NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_substituicao_selecao1_idx` (`selecao_id` ASC) VISIBLE,
-  CONSTRAINT `fk_substituicao_selecao1`
-    FOREIGN KEY (`selecao_id`)
-    REFERENCES `mydb`.`selecao` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-
-CREATE TABLE IF NOT EXISTS `mydb`.`jogador` (
-  `id` INT NOT NULL,
-  `selecao_id` INT NOT NULL,
-  `nome` VARCHAR(45) NOT NULL,
-  `Numero-Camisa` INT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_jogador_selecao1_idx` (`selecao_id` ASC) VISIBLE,
-  CONSTRAINT `fk_jogador_selecao1`
-    FOREIGN KEY (`selecao_id`)
-    REFERENCES `mydb`.`selecao` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-
-CREATE TABLE IF NOT EXISTS `mydb`.`jogador_has_substituicao` (
-  `jogador_id` INT NOT NULL,
-  `substituicao_id` INT NOT NULL,
-  PRIMARY KEY (`jogador_id`, `substituicao_id`),
-  INDEX `fk_jogador_has_substituicao_substituicao1_idx` (`substituicao_id` ASC) VISIBLE,
-  INDEX `fk_jogador_has_substituicao_jogador1_idx` (`jogador_id` ASC) VISIBLE,
-  CONSTRAINT `fk_jogador_has_substituicao_jogador1`
-    FOREIGN KEY (`jogador_id`)
-    REFERENCES `mydb`.`jogador` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_jogador_has_substituicao_substituicao1`
-    FOREIGN KEY (`substituicao_id`)
-    REFERENCES `mydb`.`substituicao` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-
-CREATE TABLE IF NOT EXISTS `mydb`.`cartoes` (
-  `jogador_id` INT NOT NULL,
-  `cartoes-amarelos` INT NULL,
-  `cartoes-vermelhos` INT NULL,
-  INDEX `fk_cartoes_jogador1_idx` (`jogador_id` ASC) VISIBLE,
-  PRIMARY KEY (`jogador_id`),
-  CONSTRAINT `fk_cartoes_jogador1`
-    FOREIGN KEY (`jogador_id`)
-    REFERENCES `mydb`.`jogador` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-
-CREATE TABLE IF NOT EXISTS `mydb`.`informacoes-selecao-em-jogo` (
-  `jogo_id` INT NOT NULL,
-  `gols_afavor` INT NULL,
-  `gols_contra` INT NULL,
-  `penaltis` INT NULL,
-  `chutes` INT NULL,
-  `chutes_ao_gol` INT NULL,
-  `impedimentos` INT NULL,
-  `escanteio` INT NULL,
-  `faltas_cometidas` INT NULL,
-  `faltas_sofridas` INT NULL,
-  `cartoes_amarelos` INT NULL,
-  `cartoes_vermelhos` INT NULL,
-  `expulcoes` INT NULL,
-  `expulcoes_por_2_cartoes_amarelos` INT NULL,
-  `time_id` INT NOT NULL,
-  PRIMARY KEY (`jogo_id`, `time_id`),
-  INDEX `fk_informacoes-jogador-em-jogo_time1_idx` (`time_id` ASC) VISIBLE,
-  CONSTRAINT `fk_informacoes-jogador-em-jogo_jogo1`
-    FOREIGN KEY (`jogo_id`)
-    REFERENCES `mydb`.`jogo` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_informacoes-jogador-em-jogo_time1`
-    FOREIGN KEY (`time_id`)
-    REFERENCES `mydb`.`time` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
+CREATE TABLE InformacoesSelecaoEmJogo(
+  jogo_id INT NOT NULL,
+  gols_afavor INT,
+  gols_contra INT,
+  penaltis INT,
+  chutes INT,
+  chutes_ao_gol INT,
+  impedimentos INT,
+  escanteio INT,
+  faltas_cometidas INT,
+  faltas_sofridas INT,
+  cartoes_amarelos INT,
+  cartoes_vermelhos INT,
+  expulcoes INT,
+  expulcoes_por_2_cartoes_amarelos INT,
+  selecao_id INT NOT NULL,
+  Foreign Key (jogo_id) REFERENCES Jogo(id),
+  Foreign Key (selecao_id) REFERENCES Selecao(id)
+);
 
 
 
@@ -310,10 +219,10 @@ INSERT INTO Torcedor VALUES(NULL , '079.027.220-22' ,'Norel');
 INSERT INTO Torcedor VALUES(NULL , '011.277.870-47' ,'Aror');
 INSERT INTO Torcedor VALUES(NULL , '992.813.710-22' ,'Zuecei');
 
-INSERT INTO Jogo VALUES(NULL , 1 , '10/08/2022' , 0 , 10);
-INSERT INTO Jogo VALUES(NULL , 1 , '11/08/2022' , 2 , 8);
-INSERT INTO Jogo VALUES(NULL , 2 , '10/08/2022' , 5 , 2);
-INSERT INTO Jogo VALUES(NULL , 2 , '11/08/2022' , 4 , 3);
+INSERT INTO Jogo VALUES(NULL , 1 , '10/08/2022' , 4 , 2);
+INSERT INTO Jogo VALUES(NULL , 1 , '11/08/2022' , 1 , 7);
+INSERT INTO Jogo VALUES(NULL , 2 , '10/08/2022' , 0 , 3);
+INSERT INTO Jogo VALUES(NULL , 2 , '11/08/2022' , 0 , 1);
 
 INSERT INTO Arbitragem VALUES(NULL , 1 , 'Neuza Back' , 'Brasil' , '188.659.150-48');
 INSERT INTO Arbitragem VALUES(NULL , 2 , 'Kathryn Nesbitt' , 'Estados Unidos' , '923.436.650-60');
@@ -346,7 +255,7 @@ INSERT INTO Cartoes VALUES ( 86 , 0 , 3);
 INSERT INTO Substituicao VALUES ( NULL , 1 , 1 , 5);
 INSERT INTO Substituicao VALUES ( NULL , 2 , 31 , 42);
 INSERT INTO Substituicao VALUES ( NULL , 3 , 53 , 64);
-INSERT INTO Substituicao VALUES ( NULL , 4 , 84 , 99);
+INSERT INTO Substituicao VALUES ( NULL , 4 , 84 , 92);
 
 
 INSERT INTO selecao_has_jogo VALUES (2 , 1);
@@ -361,14 +270,14 @@ INSERT INTO selecao_has_jogo VALUES (4 , 3);
 INSERT INTO selecao_has_jogo VALUES (4 , 4);
 
 
-INSERT INTO informacoes-selecao-em-jogo VALUES ('2' , '1' , '0' , '0' , '17', '8' , '2' , '5' , '12' , '13' , '1' , '0' , '0' , '0' , '1');
-INSERT INTO informacoes-selecao-em-jogo VALUES ('2' , '7' , '0' , '0' , '15' , '11' , '0' , '5' , '13' , '12' , '0' , '0' , '0' , '0' , '3');
+INSERT INTO InformacoesSelecaoEmJogo VALUES ('2' , '1' , '0' , '0' , '17', '8' , '2' , '5' , '12' , '13' , '1' , '0' , '0' , '0' , '1');
+INSERT INTO InformacoesSelecaoEmJogo VALUES ('2' , '7' , '0' , '0' , '15' , '11' , '0' , '5' , '13' , '12' , '0' , '0' , '0' , '0' , '3');
 
-INSERT INTO informacoes-selecao-em-jogo VALUES ('1' , '2' , '0' , '5' , '3' , '8' , '4' , '3' , '11' , '9' , '2' , '0' , '0' , '0' , '2');
-INSERT INTO informacoes-selecao-em-jogo VALUES ('1' , '4' , '0' , '5' , '11' , '6' , '4' , '3' , '9' , '11' , '1' , '0' , '0' , '0' , '4');
+INSERT INTO InformacoesSelecaoEmJogo VALUES ('1' , '2' , '0' , '5' , '3' , '8' , '4' , '3' , '11' , '9' , '2' , '0' , '0' , '0' , '2');
+INSERT INTO InformacoesSelecaoEmJogo VALUES ('1' , '4' , '0' , '5' , '11' , '6' , '4' , '3' , '9' , '11' , '1' , '0' , '0' , '0' , '4');
 
-INSERT INTO informacoes-selecao-em-jogo VALUES ('3' , '0' , '0' , '0' , '8' , '1' , '1' , '4' , '15' , '20' , '3' , '0' , '0' , '0' , '1');
-INSERT INTO informacoes-selecao-em-jogo VALUES ('3' , '3' , '0' , '0' , '6' , '4' , '2' , '1' , '20' , '15' , '2' , '0' , '0' , '0' , '2');
+INSERT INTO InformacoesSelecaoEmJogo VALUES ('3' , '0' , '0' , '0' , '8' , '1' , '1' , '4' , '15' , '20' , '3' , '0' , '0' , '0' , '1');
+INSERT INTO InformacoesSelecaoEmJogo VALUES ('3' , '3' , '0' , '0' , '6' , '4' , '2' , '1' , '20' , '15' , '2' , '0' , '0' , '0' , '2');
 
-INSERT INTO informacoes-selecao-em-jogo VALUES ('4' , '1' , '0' , '0' , '7' , '4' , '1' , '6' , '13' , '9' , '2' , '0' , '0' , '0' , '3');
-INSERT INTO informacoes-selecao-em-jogo VALUES ('4' , '0' , '0' , '0' , '6' , '0' , '2' , '3' , '9' , '13' , '2' , '0' , '0' , '0' , '4');
+INSERT INTO InformacoesSelecaoEmJogo VALUES ('4' , '1' , '0' , '0' , '7' , '4' , '1' , '6' , '13' , '9' , '2' , '0' , '0' , '0' , '3');
+INSERT INTO InformacoesSelecaoEmJogo VALUES ('4' , '0' , '0' , '0' , '6' , '0' , '2' , '3' , '9' , '13' , '2' , '0' , '0' , '0' , '4');
