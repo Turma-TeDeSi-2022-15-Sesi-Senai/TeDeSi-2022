@@ -1,3 +1,6 @@
+-- feito por @gabriel-fresan @Robsonro no github
+
+
 CREATE TABLE IF NOT EXISTS `mydb`.`estadio` (
   `id` INT NOT NULL,
   PRIMARY KEY (`id`))
@@ -348,12 +351,23 @@ INSERT INTO Substituicao VALUES ( NULL , 4 , 84 , 99);
 INSERT INTO selecao_has_jogo VALUES (2 , 1);
 INSERT INTO selecao_has_jogo VALUES (2 , 3);
 INSERT INTO selecao_has_jogo VALUES (1 , 2);
-INSERT INTO selecao_has_jogo VALUES (1 , 3);
+INSERT INTO selecao_has_jogo VALUES (1 , 4);
+
+INSERT INTO selecao_has_jogo VALUES (3 , 1);
 INSERT INTO selecao_has_jogo VALUES (3 , 2);
-INSERT INTO selecao_has_jogo VALUES (3 , 3);
-INSERT INTO selecao_has_jogo VALUES (4 , 4); 
-INSERT INTO selecao_has_jogo VALUES (4 , 1);
+
+INSERT INTO selecao_has_jogo VALUES (4 , 3); 
+INSERT INTO selecao_has_jogo VALUES (4 , 4);
 
 
 INSERT INTO informacoes-selecao-em-jogo VALUES ('2' , '1' , '0' , '0' , '17', '8' , '2' , '5' , '12' , '13' , '1' , '0' , '0' , '0' , '1');
 INSERT INTO informacoes-selecao-em-jogo VALUES ('2' , '7' , '0' , '0' , '15' , '11' , '0' , '5' , '13' , '12' , '0' , '0' , '0' , '0' , '3');
+
+INSERT INTO informacoes-selecao-em-jogo VALUES ('1' , '2' , '0' , '5' , '3' , '8' , '4' , '3' , '11' , '9' , '2' , '0' , '0' , '0' , '2');
+INSERT INTO informacoes-selecao-em-jogo VALUES ('1' , '4' , '0' , '5' , '11' , '6' , '4' , '3' , '9' , '11' , '1' , '0' , '0' , '0' , '4');
+
+INSERT INTO informacoes-selecao-em-jogo VALUES ('3' , '0' , '0' , '0' , '8' , '1' , '1' , '4' , '15' , '20' , '3' , '0' , '0' , '0' , '1');
+INSERT INTO informacoes-selecao-em-jogo VALUES ('3' , '3' , '0' , '0' , '6' , '4' , '2' , '1' , '20' , '15' , '2' , '0' , '0' , '0' , '2');
+
+INSERT INTO informacoes-selecao-em-jogo VALUES ('4' , '1' , '0' , '0' , '7' , '4' , '1' , '6' , '13' , '9' , '2' , '0' , '0' , '0' , '3');
+INSERT INTO informacoes-selecao-em-jogo VALUES ('4' , '0' , '0' , '0' , '6' , '0' , '2' , '3' , '9' , '13' , '2' , '0' , '0' , '0' , '4');
